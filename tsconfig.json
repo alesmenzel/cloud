@@ -11,15 +11,10 @@
     "strict": true,
     "declaration": true,
     "declarationDir": "types",
-    "jsx": "react-jsx",
     "declarationMap": true,
     "lib": [
       "DOM",
       "ESNext",
-    ],
-    "typeRoots": [
-      "./node_modules/@types",
-      "./types"
     ]
   },
   "include": [
