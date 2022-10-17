@@ -52,8 +52,6 @@ export class WordCollider<Item extends WordColliderConstraint> implements CloudC
     this._intersectionContext = create2DContext(width, height);
 
     this._applyMask();
-
-    document.body.append(this._context.canvas);
   }
 
   _applyMask() {
