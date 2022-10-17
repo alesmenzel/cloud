@@ -1,6 +1,6 @@
 {
   "name": "@alesmenzel/cloud",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Cloud generator.",
   "license": "MIT",
   "main": "./dist/cloud.js",
