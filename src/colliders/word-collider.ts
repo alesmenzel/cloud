@@ -27,6 +27,7 @@ export interface WordColliderConstraint {
 }
 
 export const MASK_COLOR = 'red';
+export const EMOJI_REGEX = /\p{Extended_Pictographic}/u;
 
 /**
  * Collider that detects whether a given word is colliding with the already generated words
@@ -51,6 +52,8 @@ export class WordCollider<Item extends WordColliderConstraint> implements CloudC
     this._intersectionContext = create2DContext(width, height);
 
     this._applyMask();
+
+    document.body.append(this._context.canvas);
   }
 
   _applyMask() {
@@ -89,12 +92,15 @@ export class WordCollider<Item extends WordColliderConstraint> implements CloudC
     const { text, count } = item;
     if (!text) return false;
 
+    // Emoji doesnt support strokeText, so we make the emoji bigger for padding
+    const isEmoji = EMOJI_REGEX.test(text);
+
     const ctx = this._intersectionContext;
     const { font, weight, textAlign, textBaseline, gap } = this._options;
 
     clearContext(ctx);
 
-    ctx.font = `${weight} ${count}px ${font}`;
+    ctx.font = `${weight} ${isEmoji ? count + gap : count}px ${font}`;
     ctx.textAlign = textAlign;
     ctx.textBaseline = textBaseline;
     ctx.fillStyle = MASK_COLOR;
@@ -111,7 +117,7 @@ export class WordCollider<Item extends WordColliderConstraint> implements CloudC
       return true;
     }
 
-    if (gap) {
+    if (gap && !isEmoji) {
       ctx.strokeStyle = MASK_COLOR;
       ctx.lineWidth = 2 * gap; // stroke is centered
       ctx.strokeText(text, x, y);
@@ -139,16 +145,20 @@ export class WordCollider<Item extends WordColliderConstraint> implements CloudC
     }
 
     // UInt8 [RGBA RGBA RGBA ...]
-    // We care only about the R(ed), because thats what we use to paint the mask
     for (let i = 0; i < painted.length; i += 4) {
-      if (itemPaint[i] && painted[i]) return true;
+      // Mask
+      const alpha = painted[i + 3];
+      // New item
+      const alpha2 = itemPaint[i + 3];
+      // Return as intersecting when the same pixels are not transparent
+      if (alpha !== 0 && alpha2 !== 0) return true;
     }
 
-    this._context.font = `${weight} ${count}px ${font}`;
+    this._context.font = `${weight} ${isEmoji ? count + gap : count}px ${font}`;
     this._context.textAlign = textAlign;
     this._context.textBaseline = textBaseline;
     this._context.fillStyle = MASK_COLOR;
-    if (gap) {
+    if (gap && !isEmoji) {
       this._context.strokeStyle = MASK_COLOR;
       this._context.lineWidth = 2 * gap; // stroke is centered
       this._context.strokeText(text, x, y);
