@@ -85,7 +85,9 @@ export function MyCloud() {
 
   // Update the cloud when dimensions change
   const { width, height } = size;
-  useEffect(() => {
+  
+  // It is important to use layoutEffect here - see https://medium.com/@alesmenzel/reacts-useeffect-nightmare-4c56f105acc8
+  useLayoutEffect(() => {
     cloud.update({ width, height });
     setPoints([])
 
