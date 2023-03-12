@@ -10,14 +10,18 @@ export class Cloud<Item> implements CloudInstance<Item> {
   constructor(options: CloudOptions<Item>) {
     this._options = {
       attempts: 10,
+      width: 100,
+      height: 100,
       ...options,
     };
+
+    this.update();
   }
 
   /**
    * Update the cloud settings and reset the cloud.
    */
-  update(options: Partial<CloudOptions<Item>>, reset = true) {
+  update(options?: Partial<CloudOptions<Item>>, reset = true) {
     this._options = { ...this._options, ...options };
 
     const { width, height, randomizer, collider } = this._options;
@@ -39,10 +43,14 @@ export class Cloud<Item> implements CloudInstance<Item> {
 
     let i = 0;
     while (i < this._options.attempts) {
-      const { x, y } = randomizer.next({ index: i, attempts: this._options.attempts, item });
+      const { x, y, rotation } = randomizer.next({
+        index: i,
+        attempts: this._options.attempts,
+        item,
+      });
 
-      if (!collider.intersects({ x, y, item })) {
-        return { x, y };
+      if (!collider.intersects({ x, y, rotation, item })) {
+        return { x, y, rotation };
       }
 
       i += 1;

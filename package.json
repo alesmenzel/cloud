@@ -12,6 +12,7 @@
     "format": "eslint --fix .",
     "pretest": "run-s lint types",
     "test": "jest --ci --config ./jest/jest.config.js",
+    "test:unit": "jest --ci --config ./jest/jest.config.js",
     "test:coverage": "jest --ci --config ./jest/jest-coverage.config.js",
     "types": "tsc --noEmit --project tsconfig.json",
     "prepublishOnly": "npm run test",

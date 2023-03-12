@@ -3,7 +3,7 @@ import { CloudCollider, CloudPoint, CloudRandomizer } from './types';
 
 class DummyRandomizer<Item> implements CloudRandomizer<Item> {
   next(): CloudPoint {
-    return { x: 10, y: 10 };
+    return { x: 10, y: 10, rotation: 0 };
   }
 }
 
@@ -33,8 +33,8 @@ describe('Cloud', () => {
       randomizer: new DummyRandomizer(),
       collider: new DummyCollider(),
     });
-    expect(cloud.next('first')).toEqual({ x: 10, y: 10 });
-    expect(cloud.next('second')).toEqual({ x: 10, y: 10 });
-    expect(cloud.next('third')).toEqual({ x: 10, y: 10 });
+    expect(cloud.next('first')).toEqual({ x: 10, y: 10, rotation: 0 });
+    expect(cloud.next('second')).toEqual({ x: 10, y: 10, rotation: 0 });
+    expect(cloud.next('third')).toEqual({ x: 10, y: 10, rotation: 0 });
   });
 });
