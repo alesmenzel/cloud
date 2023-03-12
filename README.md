@@ -10,9 +10,41 @@ npm install @alesmenzel/cloud
 
 ### Usage
 
-TODO
+#### `class Cloud<Item>`
 
-### React
+```ts
+Item extends { word: string, count: number }
+```
+
+Creates the main Cloud instance that handles the orchestration of generating a new random point and then
+checking for intersections.
+
+##### `cloud.next(item: Item): CloudPoint | null`
+
+Calculates the next word position. When a new position cannot be determined after all attempts, it returns `null`.
+
+##### `cloud.update(options?: Partial<CloudOptions<Item>>, reset = true): void`
+
+Update cloud's options. Typically used to update `width` and `height` for responsive clouds. Changing options resets the internal state by default (e.g. randomizer's generator or collider's intersection context), send `false` to keep the previous state.
+
+#### Randomizer
+
+Randomizer is a class that generates points and rotation in the canvas. Randomizer can be totally random and generate points in the canvas width/height or can be based on some shape, e.g. [Archimedean spiral](https://en.wikipedia.org/wiki/Archimedean_spiral), which can produce nicer (and faster because of less collisions) word clouds.
+
+Built in randomizers
+
+- `RandomRandomizer` - generates totally random points until the word doesnt collide with anything
+- `ArchimedeanRandomRandomizer` - for each attempt, generates a point on the spiral further from the center until the word doesnt collide with anything
+
+#### Colliders
+
+Collider is a class that tracks the current state of the cloud and checks whether new given point intersects with already existing words.
+
+Built in colliders
+
+- `WordCollider` - can render words and emojis, which can be rotated and allows for gap between words
+
+### Example in React
 
 Example of how to use wordcloud generator with React.
 
@@ -85,7 +117,7 @@ export function MyCloud() {
 
   // Update the cloud when dimensions change
   const { width, height } = size;
-  
+
   // It is important to use layoutEffect here - see https://medium.com/@alesmenzel/reacts-useeffect-nightmare-4c56f105acc8
   useLayoutEffect(() => {
     cloud.update({ width, height });

@@ -21,7 +21,7 @@ export class Cloud<Item> implements CloudInstance<Item> {
   /**
    * Update the cloud settings and reset the cloud.
    */
-  update(options?: Partial<CloudOptions<Item>>, reset = true) {
+  update(options?: Partial<CloudOptions<Item>>, reset = true): void {
     this._options = { ...this._options, ...options };
 
     const { width, height, randomizer, collider } = this._options;
